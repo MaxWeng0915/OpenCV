@@ -1,0 +1,26 @@
+提示电脑内存不够了，但是很多时候电脑内存是足够，但是还是无法加载，原因很简单，主要是OpenCV本身对加载的图像大小是由限制的，这个限制定义在
+
+modules\imgcodecs\src\loadsave.cpp
+
+这个源码文件中，有三个关于图像imread时候最大图像宽、高、像素数目大小限制，定义的代码为：
+
+static const size_t CV_IO_MAX_IMAGE_WIDTH = utils::getConfigurationParameterSizeT("OPENCV_IO_MAX_IMAGE_WIDTH", 1 << 20);
+static const size_t CV_IO_MAX_IMAGE_HEIGHT = utils::getConfigurationParameterSizeT("OPENCV_IO_MAX_IMAGE_HEIGHT", 1 << 20);
+static const size_t CV_IO_MAX_IMAGE_PIXELS = utils::getConfigurationParameterSizeT("OPENCV_IO_MAX_IMAGE_PIXELS", 1 << 30);
+解释如下：
+
+支持的最大图像宽度 2^20
+支持的最大图像高度2^20
+支持的最大像素数目2^30
+函数validateInputImageSize会首先校验图像的大小，
+
+static Size validateInputImageSize(const Size& size)
+{
+    CV_Assert(size.width > 0);
+    CV_Assert(static_cast<size_t>(size.width) <= CV_IO_MAX_IMAGE_WIDTH);
+    CV_Assert(size.height > 0);
+    CV_Assert(static_cast<size_t>(size.height) <= CV_IO_MAX_IMAGE_HEIGHT);
+    uint64 pixels = (uint64)size.width * (uint64)size.height;
+    CV_Assert(pixels <= CV_IO_MAX_IMAGE_PIXELS);
+    return size;
+}
