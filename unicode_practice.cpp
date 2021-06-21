@@ -1,3 +1,4 @@
+	//unicode檔案名讀取圖檔
 	cv::Mat readcvunicode(std::wstring filename)
 	{
 		FILE* fp = _wfopen(filename.c_str(), L"rb");
@@ -16,7 +17,8 @@
 		fclose(fp);
 		return img;
 	}
-	
+
+	//unicode檔案名保存圖檔
 	int writecvunicode(std::wstring filename, cv::Mat src, int typ)
 	{
 		std::vector<uchar> data_encode;
