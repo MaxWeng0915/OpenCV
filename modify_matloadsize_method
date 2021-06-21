@@ -9,9 +9,9 @@ static const size_t CV_IO_MAX_IMAGE_HEIGHT = utils::getConfigurationParameterSiz
 static const size_t CV_IO_MAX_IMAGE_PIXELS = utils::getConfigurationParameterSizeT("OPENCV_IO_MAX_IMAGE_PIXELS", 1 << 30);
 解释如下：
 
-支持的最大图像宽度 2^20
-支持的最大图像高度2^20
-支持的最大像素数目2^30
+支持的最大图像宽度 2^20 = 1,048,576
+支持的最大图像高度2^20 = 1,048,576
+支持的最大像素数目2^30 = 536,870,912
 函数validateInputImageSize会首先校验图像的大小，
 
 static Size validateInputImageSize(const Size& size)
@@ -24,3 +24,10 @@ static Size validateInputImageSize(const Size& size)
     CV_Assert(pixels <= CV_IO_MAX_IMAGE_PIXELS);
     return size;
 }
+
+如果要修改可判讀的圖片大小可修改:
+static const size_t CV_IO_MAX_IMAGE_PIXELS = utils::getConfigurationParameterSizeT("OPENCV_IO_MAX_IMAGE_PIXELS", 1 << 30);
+改變為:
+static const size_t CV_IO_MAX_IMAGE_PIXELS = utils::getConfigurationParameterSizeT("OPENCV_IO_MAX_IMAGE_PIXELS", 1 << 40);
+
+最大像素数目2^40 = 1,099,511,627,776
