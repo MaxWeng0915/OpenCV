@@ -31,3 +31,22 @@ static const size_t CV_IO_MAX_IMAGE_PIXELS = utils::getConfigurationParameterSiz
 static const size_t CV_IO_MAX_IMAGE_PIXELS = utils::getConfigurationParameterSizeT("OPENCV_IO_MAX_IMAGE_PIXELS", 1 << 40);
 
 最大像素数目2^40 = 1,099,511,627,776
+
+20210622更新:
+按照上述方法，雖然可以成功編譯dll，但是實際應用在WIZER專案上，會出現錯誤訊息(code: -215)。
+因此我嘗試將validateInputImageSize內的全部判斷取消不做，反而可以成功讀取圖片。
+上述方法是針對imread做修改，但是我使用的是imdecode，可能還是有一些差別。
+
+static Size validateInputImageSize(const Size& size)
+{
+   /* CV_Assert(size.width > 0);
+    CV_Assert(static_cast<size_t>(size.width) <= CV_IO_MAX_IMAGE_WIDTH);
+    CV_Assert(size.height > 0);
+    CV_Assert(static_cast<size_t>(size.height) <= CV_IO_MAX_IMAGE_HEIGHT);
+    uint64 pixels = (uint64)size.width * (uint64)size.height;
+    CV_Assert(pixels <= CV_IO_MAX_IMAGE_PIXELS);*/
+    return size;
+}
+
+
+
